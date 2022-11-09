@@ -50,6 +50,7 @@ async function run(client, interaction, stringJSON){
 			conn.release();}
 		}
 		else if (subCommand == 'list'){
+			console.log(dbData)
 			global.toConsole.log('/servers list run by ' + interaction.user.username + '#' + interaction.user.discriminator + ' (' + interaction.user.id + ')')
 			if (!dbData.servers.length){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.servers.noSaved, 'error', stringJSON)], ephemeral: true})};
 			var embedFields = []

@@ -7,7 +7,7 @@
 				"thumbnailEnable": true,
 				"online": {
 					"header": {
-						"text": "statut pour %ip%",
+						"text": "Statut de %ip%",
 						"display": true
 					},
 					"footer": {
@@ -15,7 +15,7 @@
 						"display": true
 					},
 					"body": {
-						"text": ":green_circle: le serveur est en ligne \n \n **Type:** %type% \n **MOTD du serveur:** %motd% \n **Version du jeux:** %version% \n **Maximum de joueurs:** %max% \n **Il y a ** %now% connecter \n **Latence du serveur:** %ping% ms \n il reste **%open%** joueur qui peuvent encore se connecter",
+						"text": ":green_circle: Le serveur est en ligne \n \n **Type : ** %type% \n **MOTD du serveur : ** %motd% \n **Version du jeu : **%version% \n **Joueurs maximum:** %max% \n **Il y a ** %now% joueurs connectés \n **Latence du serveur:** %ping% ms \n **%open%** joueurs peuvent encore se connecter",
 						"display": true
 					},
 					"playersList": {
@@ -28,7 +28,7 @@
 				"offline": {
 					"header": {
 						"display": true,
-						"text": "Impossible de r�cup�rer le statut."
+						"text": "Impossible de récupérer le statut."
 					},
 					"footer": {
 						"display": true,
@@ -48,19 +48,19 @@
 				"thumbnailEnable": true,
 				"online": {
 					"header": {
-						"text": "Le statut du serveur %ip%",
+						"text": "Statut de %ip%",
 						"display": true
 					},
 					"footer": {
-						"text": "Derniere Update",
+						"text": "Dernière mise à jour",
 						"display": true
 					},
 					"body": {
-						"text": ":green_circle: Le serveurs est en ligne \n \n **Type:** %type% \n **MOTD:** %motd% \n **Version du jeux:** %version% \n **Maximun de joueurs:** %max% \n Il y a **%now%** connecter",
+						"text": ":green_circle: Le serveur est en ligne \n \n **Type:** %type% \n **MOTD:** %motd% \n **Version du jeu :** %version% \n **Joueurs maximum:** %max% \n Il y a **%now%** joueurs connectés",
 						"display": true
 					},
 					"playersList": {
-						"header": "Joueurs:",
+						"header": "Joueurs : ",
 						"display": true
 					},
 					"timestampEnable": true,
@@ -69,16 +69,16 @@
 				"offline": {
 					"header": {
 						"display": true,
-						"text": "Impossible de r�cup�rer le statut."
+						"text": "Impossible de récupérer le statut."
 					},
 					"footer": {
 						"display": true,
-						"text": "Derniere Mise a Jours"
+						"text": "Dernière mise à jour"
 					},
 					"timestampEnable": true,
 					"body": {
 						"display": true,
-						"text": ":red_circle: Le serveurs est eteint \n Error: %error%"
+						"text": ":red_circle: Le serveurs est éteint \n Erreur: %error%"
 					},
 					"embedColor": "E74C3C"
 				}
@@ -113,10 +113,6 @@
 		{
 			"trigger": "Start your server at www.minefort.com",
 			"domain": "minefort.com"
-		},
-		{
-			"trigger": "This server is OFFLINE!",
-			"domain" : "falixserver.net"
 		}
 	]
 }

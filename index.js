@@ -1,15 +1,17 @@
 const { ShardingManager } = require('kurasuta');
 const { join } = require('path');
 const { Client, Intents } = require('discord.js');
-const chalk = require ('chalk')
+const fs = require ('fs')
+
+const shardCount = (JSON.parse(fs.readFileSync("./assets/config.json"))).shardCount
 
 global.shardCrashCount = 0;
 
 setInterval(function(){global.shardCrashCount = 0}, 86400000) //resets shard reconnect count daily
 
 const sharder = new ShardingManager(join(__dirname, 'bot'), {
-	clusterCount: 1,
-	shardCount: 1,
+	clusterCount: shardCount,
+	shardCount: shardCount,
 	timeout: 30000,
 	clientOptions: {partials: ['MESSAGE'], intents: [Intents.FLAGS.GUILDS]},
 	ipcSocket: 9999

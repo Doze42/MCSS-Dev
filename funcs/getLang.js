@@ -3,7 +3,7 @@ module.exports = {getLang};
 
 const en = {
 	strings: JSON.parse(fs.readFileSync("./lang/en/strings.json")),
-	defaults: JSON.parse(fs.readFileSync("./lang/en/strings.json"))
+	defaults: JSON.parse(fs.readFileSync("./lang/en/defaults.json"))
 }
 const fr = {
 	strings: JSON.parse(fs.readFileSync("./lang/fr/strings.json")),
