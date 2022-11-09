@@ -2,16 +2,16 @@
 
 const richEmbeds = require('../funcs/embeds'); //embed generation
 module.exports = {run}
-const sql = require('mssql')
 const queryServer = require('../funcs/queryServer.js');
 const Discord = require('discord.js') //discord.js for embed object
 const strings = require('../funcs/strings'); //public string manipulation functions
-const { v4: uuid } = require('uuid');
 const compat = require ('../funcs/compat.js');
 
 async function run(client, interaction, stringJSON){
 try{
-	var dbData = (await new sql.Request(global.pool).query('SELECT TOP 1 * from SERVERS WHERE SERVER_ID = ' + interaction.guildId)).recordset[0];
+	{let conn = await global.pool.getConnection();
+	var dbData = (await conn.query("SELECT * from SERVERS WHERE SERVER_ID = " + interaction.guildId + " LIMIT 1"))[0];
+	conn.release();}
 	global.toConsole.log('/automsg run by ' + interaction.user.username + '#' + interaction.user.discriminator + ' (' + interaction.user.id + ')')
 	global.shardInfo.commandsRun++
 	var serverIP = interaction.options.getString('address');
@@ -23,7 +23,9 @@ try{
 	if (interaction.channel.type !== 'GUILD_TEXT') {return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.channelType, 'error', stringJSON)], ephemeral: true})} //news or announcement channels
 	if (!interaction.channel.permissionsFor(interaction.client.user.id).has(["SEND_MESSAGES", "EMBED_LINKS", "ATTACH_FILES"])){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.channelPerms, 'error', stringJSON)], ephemeral: true})}
 	if (interaction.user.PermissionLevel == 0 && !interaction.member.permissions.has("ADMINISTRATOR")){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.restricted, 'error', stringJSON)], ephemeral: true})}
-	if((await new sql.Request(global.pool).query("SELECT * from LIVE WHERE serverID = " + interaction.guildId)).recordset.length >= JSON.parse(dbData.CONFIG).limits.liveElements){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.maxElements, 'error', stringJSON)], ephemeral: true})} //checks live element limits
+	{let conn = await global.pool.getConnection();
+	if((await conn.query("SELECT * from LIVE WHERE serverID = " + interaction.guildId)).slice(0, -1).length >= JSON.parse(dbData.CONFIG).limits.liveElements){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.maxElements, 'error', stringJSON)], ephemeral: true})} //checks live element limits
+	conn.release();}
 	var guildServers = JSON.parse(dbData.SERVERS)
 	if (!serverIP && !serverAlias && !guildServers.servers.length){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.noServer, 'error', stringJSON)], ephemeral: true})}
 	if (!serverIP && !serverAlias){serverAlias = guildServers.servers[guildServers.default].alias}
@@ -79,7 +81,8 @@ try{
 	if(embedData[0].thumbnailEnable){var message = await interaction.channel.send({files: [new Discord.MessageAttachment(Buffer.from(bufferSource, 'base64'), 'favicon.png')], embeds: [statEmbed]})}
 	else{var message = await interaction.channel.send({embeds: [statEmbed]})}
 	if (serverPort){serverIP = serverIP += (':' + serverPort)}
-	await new sql.Request(global.pool).query("INSERT INTO LIVE VALUES ('" + uuid() + "', N'" + JSON.stringify(
+	{let conn = await global.pool.getConnection();
+	await conn.query("INSERT INTO LIVE VALUES (uuid(), N'" + JSON.stringify(
 		{
 			"type": "panel",
 			"ip": serverIP,
@@ -90,7 +93,8 @@ try{
 			"guildID": message.guildId,
 			"embedTemplate": embedData[0],
 			"lastState": statEmbed
-		}).replace(/'/g, "''") + "', " + message.guildId + ")");
+		}).replace(/\\n/g, "\\\\n").replace(/'/g, "''") + "', " + message.guildId + ")");
+	conn.release();}
 	return interaction.editReply({embeds:[richEmbeds.makeReply(stringJSON.automsg.success, 'notif', stringJSON)]})
 }
 

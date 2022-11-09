@@ -18,9 +18,8 @@
     "fs": "^0.0.1-security",
     "kurasuta": "^3.0.1",
     "lodash.isequal": "^4.5.0",
-    "mssql": "^7.2.1",
+    "mariadb": "^3.0.1",
     "sharp": "^0.29.1",
-    "systeminformation": "^5.9.2",
-    "uuid": "^9.0.0"
+    "systeminformation": "^5.9.2"
   }
 }

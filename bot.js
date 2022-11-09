@@ -5,9 +5,9 @@ const fs = require('fs')
 
 global.botConfig = JSON.parse(fs.readFileSync("./assets/config.json")); //Settings and configuration FileUpload
 
-const sql = require('mssql')
-global.pool = new sql.ConnectionPool(botConfig.configs[botConfig.release].dbConfig);
-global.pool.connect();
+const sql = require('mariadb')
+
+global.pool = new sql.createPool(global.botConfig.configs[global.botConfig.release].dbConfig);
 
 global.statusCache = new Map();
 var statusQueue = [];
@@ -28,14 +28,14 @@ const liveNotifier = require('./funcs/liveNotifier.js');
 const channelEdit = require('./funcs/channelEdit.js')
 const panelEdit = require('./funcs/panelEdit.js')
 const loadDefaults = require('./funcs/loadDefaults.js')
+const getLang = require('./funcs/getLang.js').getLang
 
 global.staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
-//Loads JSON string files from disk into memory
-var lang_en = JSON.parse(fs.readFileSync("./lang/lang_en.json")); //English
-var lang_jp = JSON.parse(fs.readFileSync("./lang/lang_jp.json")); //Japanese 
-var lang_it = JSON.parse(fs.readFileSync("./lang/lang_it.json")); //Italian
 
-var stringJSON = lang_en //default value remove later
+
+var stringJSON = getLang('en')
+
+
 
 //Commands
 const commands = {
@@ -69,13 +69,13 @@ global.toConsole = { //Categorized Console Logging
 
 global.toConsole.log('Spawning Shard...')
 
-sql.on('error', err => {
+/* sql.on('error', err => {
     global.toConsole.error('SQL Error: ' + err, 'error');
 })
 
 global.pool.on('error', err => {
     global.toConsole.error('Pool Error: ' + err, 'error');
-})
+}) */
 
 
 process.on('unhandledRejection', err => { //Logs error and restarts shard on unhandledRejection
@@ -99,22 +99,31 @@ client.on('interactionCreate', async function (interaction){
 try {
 	if(!interaction.isCommand()) return; //exits if not command
 	if(interaction.inGuild()){
-		if(!(await new sql.Request(global.pool).query('SELECT TOP 1 * from SERVERS WHERE SERVER_ID = ' + interaction.guildId)).recordset.length){ //Adds new servers to database
-		try{await loadDefaults.addServer(interaction.guildId)}
-		catch(err){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.cmdHandler.databaseAddFailed, 'error', stringJSON)], ephemeral: true})}}
+		console.log(interaction.guild.preferredLocale)
+		{let conn = await global.pool.getConnection();
+		var guildData = await conn.query('SELECT * FROM SERVERS WHERE SERVER_ID = ' + interaction.guildId + ' LIMIT 1')
+		if (!guildData.length){ //Adds new servers to database	
+			var lang = getLang(interaction.guild.preferredLocale.slice(0, 2))
+			try{await loadDefaults.addServer(interaction.guildId, lang.defaults)}
+			catch(err){return interaction.reply({embeds:[richEmbeds.makeReply(lang.strings.cmdHandler.databaseAddFailed, 'error', lang.strings)], ephemeral: true})}
+		}
+		else{var lang = getLang((JSON.parse(guildData[0].CONFIG)).lang)}
+		conn.release()}
 	}
-	var userData = (await new sql.Request(global.pool).query('SELECT TOP 1 * from USERS WHERE ID = ' + interaction.user.id)).recordset[0]
+	{let conn = await global.pool.getConnection();
+	var userData = (await conn.query('SELECT * FROM USERS WHERE ID = ' + interaction.user.id + ' LIMIT 1')).slice(0, -1)[0]
+	conn.release();}
 	if (userData){
-		if (userData.BLACKLIST){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.blacklisted + userData.BLACKLIST_REASON, 'error', stringJSON)], ephemeral: true})}
+		if (userData.BLACKLIST){return interaction.reply({embeds:[richEmbeds.makeReply(lang.strings.permissions.blacklisted + userData.BLACKLIST_REASON, 'error', lang.strings)], ephemeral: true})}
 		interaction.user.PermissionLevel = userData.PLEVEL}
 	else {interaction.user.PermissionLevel = 0;}
-	if (interaction.commandName == 'invite'){commands.invite.run(client, interaction, stringJSON);}
-	else if (interaction.commandName == 'status'){commands.status.run(client, interaction, stringJSON);}
-	else if (interaction.commandName == 'botstats'){commands.botstats.run(client, interaction, stringJSON);}
-	else if (interaction.commandName == 'servers'){commands.servers.run(client, interaction, stringJSON);}
-	else if (interaction.commandName == 'automsg'){commands.automsg.run(client, interaction, stringJSON);}
-	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, stringJSON);}
-	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, stringJSON);}
+	if (interaction.commandName == 'invite'){commands.invite.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'status'){commands.status.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'botstats'){commands.botstats.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'servers'){commands.servers.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'automsg'){commands.automsg.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, lang.strings);}
+	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'test'){
 
 	}
@@ -125,15 +134,17 @@ catch (err){global.toConsole.error("Interaction Failed: " + err)}
 async function liveStatus(){
 	global.toConsole.debug('Starting Live Status update..')
 	var refreshStart = new Date().getTime();
-	var dbData = await new sql.Request(global.pool).query("SELECT * FROM LIVE");
+	{let conn = await global.pool.getConnection();
+	var dbData = await conn.query("SELECT * FROM LIVE")
+	conn.release();}
 	var i = 0;
 	var elements = new Map();
-	for (var i = 0; i < dbData.recordset.length; i++){if(client.guilds.cache.has(dbData.recordset[i].serverID)){elements.set(dbData.recordset[i].guid, dbData.recordset[i])}}
+	for (var i = 0; i < dbData.length; i++){if(client.guilds.cache.has(dbData[i].serverID)){elements.set(dbData[i].guid, dbData[i])}}
 	for await (const [key, value] of elements){
 		try{
 			var data = JSON.parse(value.data);
 			if (data.type == 'panel'){				
-				var res = await panelEdit.check(data, stringJSON)
+				var res = await panelEdit.check(data, stringJSON.strings)
 			}
 		}
 		catch(err){continue;} //handle this error right
@@ -175,22 +186,28 @@ async function processQueue(){ //todo: add try/catch
 			try{
 				var element = statusQueue.shift();	
 				if (element.type == 'panel'){
-					var panelData = JSON.parse((await new sql.Request(global.pool).query("SELECT * FROM LIVE WHERE guid = '" + element.guid +"'")).recordset[0].data)
+					{let conn = await global.pool.getConnection();
+					var panelData = JSON.parse((await conn.query("SELECT * FROM LIVE WHERE guid = '" + element.guid + "'"))[0].data)
+					conn.release();}
 					try{
-						await panelEdit.update(element, client, stringJSON)					
+						await panelEdit.update(element, client, stringJSON.strings)					
 						panelData.lastPing = element.timestamp;
 						panelData.lastState = element.embed;
 						panelData.failureCount = 0;
 					}
 					catch(err){ //Panel failed, log
 						if (panelData.failureCount >= global.botConfig.configs[global.botConfig.release].liveElementMaxFails || err == 'remove'){
-						await new sql.Request(global.pool).query("DELETE FROM LIVE WHERE guid = '" + element.guid +"'")
+						{let conn = await global.pool.getConnection();
+						await conn.query("DELETE FROM LIVE WHERE guid = '" + element.guid)
+						conn.release();}
 						toConsole.log('Panel with ID ' + element.messageID + ' has been removed due to failure count or channel issues.')}
 						else{panelData.failureCount++
 						toConsole.log('Panel with ID ' + element.messageID + ' failed to update: ' + err)}
 					} 				
 					resolve('Finished Updating')
-					await new sql.Request(global.pool).query("UPDATE LIVE SET data = N'" + JSON.stringify(panelData).replace(/'/g, "''") + "' WHERE guid = '" + element.guid + "'")
+					{let conn = await global.pool.getConnection();
+					await conn.query(("UPDATE LIVE SET data = N'" + JSON.stringify(panelData).replace(/'/g, "''") + "' WHERE guid = '" + element.guid + "' LIMIT 1").replace(/\\n/g, "\\\\n"))
+					conn.release();}
 				}
 				//other status types will be added here
 			
