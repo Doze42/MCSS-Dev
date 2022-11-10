@@ -46,7 +46,8 @@ servers: require('./commands/servers'),
 automsg: require('./commands/automsg'),
 autocnl: require('./commands/autocnl'),
 admin: require('./commands/admin'),
-help: require('./commands/help')
+help: require('./commands/help'),
+embeds: require('./commands/embeds')
 }
 
 global.shardInfo = {
@@ -101,7 +102,6 @@ client.on('interactionCreate', async function (interaction){
 try {
 	if(!interaction.isCommand()) return; //exits if not command
 	if(interaction.inGuild()){
-		console.log(interaction.guild.preferredLocale)
 		{let conn = await global.pool.getConnection();
 		var guildData = await conn.query('SELECT * FROM SERVERS WHERE SERVER_ID = ' + interaction.guildId + ' LIMIT 1')
 		if (!guildData.length){ //Adds new servers to database	
@@ -125,6 +125,7 @@ try {
 	else if (interaction.commandName == 'servers'){commands.servers.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'automsg'){commands.automsg.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'test'){
 

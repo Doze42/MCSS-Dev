@@ -7,21 +7,22 @@ function statusEmbed(args, stringJSON){
 	const statusEmbed = new Discord.MessageEmbed()
 	if (args.online === false){
 		args.format = JSON.parse(strings.insertData(JSON.stringify (args.format), args.data))
-		if(args.format.offline.header.display){statusEmbed.setTitle(strings.truncate(args.format.offline.header.text, 50, true))}
+		console.log(args.format.offline.header)
+		if(args.format.offline.header){statusEmbed.setTitle(strings.truncate(args.format.offline.header, 50, true))}
 		statusEmbed.setColor(args.format.offline.embedColor)
-		if(args.format.offline.footer.display){statusEmbed.setFooter({text: strings.truncate(args.format.offline.footer.text, 50, true)})}
+		if(args.format.offline.footer){statusEmbed.setFooter({text: strings.truncate(args.format.offline.footer, 50, true)})}
 		if(args.format.offline.timestampEnable){statusEmbed.setTimestamp()}
 		if(args.format.thumbnailEnable){statusEmbed.setThumbnail('attachment://' + args.favicon)}
-		if(args.format.offline.body.display){statusEmbed.setDescription(args.format.offline.body.text)}
+		if(args.format.offline.body){statusEmbed.setDescription(args.format.offline.body)}
 	}
 	else if (args.online === true){
 		args.format = JSON.parse(strings.insertData(JSON.stringify (args.format), args.data))
-		if(args.format.online.header.display){statusEmbed.setTitle(strings.truncate(args.format.online.header.text, 50, true))}
+		if(args.format.online.header){statusEmbed.setTitle(strings.truncate(args.format.online.header, 50, true))}
 		statusEmbed.setColor(args.format.online.embedColor)
-		if(args.format.online.footer.display){statusEmbed.setFooter({text: strings.truncate(args.format.online.footer.text, 50, true)})}	
+		if(args.format.online.footer){statusEmbed.setFooter({text: strings.truncate(args.format.online.footer, 50, true)})}	
 		if(args.format.online.timestampEnable){statusEmbed.setTimestamp()}
 		if(args.format.thumbnailEnable){statusEmbed.setThumbnail('attachment://' + args.favicon)}
-		if(args.format.online.body.display){statusEmbed.setDescription(args.format.online.body.text)}
+		if(args.format.online.body){statusEmbed.setDescription(args.format.online.body)}
 		if(args.format.online.playersList.display && args.data.players.list && args.data.players.list.length){statusEmbed.addFields({
 		"name": args.format.online.playersList.header,
 		"value": args.data.players.list.slice(0, 10).map(player => player.name).sort().join('\n'), 
