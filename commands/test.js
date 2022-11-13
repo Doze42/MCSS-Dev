@@ -20,6 +20,7 @@ buf = await axios.get(attachment.url, {responseType: 'arraybuffer'}).then(res =>
 var bufferSource = await sharp(Buffer.from(buf).resize({width: 256, height: 256, fit: 'fill'}).toBuffer('base64')).toString('base64')
 }catch(err){console.log(err)}
 await interaction.reply({files: [new Discord.MessageAttachment(Buffer.from(bufferSource, 'base64'), 'logo.png')]})
+bufferSource = (await sharp(Buffer.from(await axios.get(attachments[0].url, {responseType: 'arraybuffer'}).then(res => Buffer.from(res.data, 'binary').toString('base64')), 'base64')).resize({width: 256, height: 256, fit: 'fill'}).toBuffer('base64')).toString('base64')
 }
 catch(err){
 console.log('Error!')
