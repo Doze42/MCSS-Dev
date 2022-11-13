@@ -7,13 +7,13 @@ const Discord = require('discord.js') //discord.js for embed object
 async function run(client, interaction, stringJSON){
 	global.shardInfo.commandsRun++
 	try{
+		if(!interaction.inGuild()){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.noDM, 'error', stringJSON)], ephemeral: true})}
 		var subCommand = interaction.options.getSubcommand()
 		{let conn = await global.pool.getConnection();
 		var dbData = JSON.parse((await conn.query("SELECT * from SERVERS WHERE SERVER_ID = " + interaction.guildId + " LIMIT 1"))[0].SERVERS);
 		conn.release();}
 		if (subCommand == 'add'){
 			global.toConsole.log('/servers add run by ' + interaction.user.username + '#' + interaction.user.discriminator + ' (' + interaction.user.id + ')')
-			if(!interaction.inGuild()){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.noDM, 'error', stringJSON)], ephemeral: true})}
 			if(!client.guilds.cache.has(interaction.guildId)){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.botScope, 'error', stringJSON)], ephemeral: true})} //bot scope
 			if (interaction.user.PermissionLevel == 0 && !interaction.member.permissions.has("ADMINISTRATOR")){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.restricted, 'error', stringJSON)], ephemeral: true})}
 			if (dbData.servers.length >= 5){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.servers.maxServers, 'error', stringJSON)], ephemeral: true})}
@@ -37,7 +37,6 @@ async function run(client, interaction, stringJSON){
 			}
 		else if (subCommand == 'remove') {
 			global.toConsole.log('/servers remove run by ' + interaction.user.username + '#' + interaction.user.discriminator + ' (' + interaction.user.id + ')')
-			if (interaction.channel.type == 'dm') {return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.noDM, 'error', stringJSON)], ephemeral: true})}
 			if (interaction.user.PermissionLevel == 0 && !interaction.member.permissions.has("ADMINISTRATOR")){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.restricted, 'error', stringJSON)], ephemeral: true})}
 			var alias = interaction.options.getString('alias')
 			var removeIndex = dbData.servers.findIndex((obj) => obj.alias === alias)

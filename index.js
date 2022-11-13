@@ -3,15 +3,15 @@ const { join } = require('path');
 const { Client, Intents } = require('discord.js');
 const fs = require ('fs')
 
-const shardCount = (JSON.parse(fs.readFileSync("./assets/config.json"))).shardCount
+const config = JSON.parse(fs.readFileSync("./assets/config.json"))
 
 global.shardCrashCount = 0;
 
 setInterval(function(){global.shardCrashCount = 0}, 86400000) //resets shard reconnect count daily
 
 const sharder = new ShardingManager(join(__dirname, 'bot'), {
-	clusterCount: shardCount,
-	shardCount: shardCount,
+	clusterCount: config.shardCount,
+	shardCount: config.shardCount,
 	timeout: 30000,
 	clientOptions: {partials: ['MESSAGE'], intents: [Intents.FLAGS.GUILDS]},
 	ipcSocket: 9999
@@ -20,7 +20,10 @@ const sharder = new ShardingManager(join(__dirname, 'bot'), {
 sharder.spawn();
 
 sharder.on('error', (err) => {
+	console.log(shardCrashCount)
 	global.shardCrashCount++;
-	if (global.shardCrashCount > 500){process.exit(1)} //Kills process to avoid shard reconnection ratelimit
+	if (global.shardCrashCount > config.crashLimit){
+	console.log('Shard crash limit exceeded, exiting process')
+	process.exit(1)} //Kills process to avoid shard reconnection ratelimit
 	console.log('Sharder Error: ' + err)
 });

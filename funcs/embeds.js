@@ -7,7 +7,6 @@ function statusEmbed(args, stringJSON){
 	const statusEmbed = new Discord.MessageEmbed()
 	if (args.online === false){
 		args.format = JSON.parse(strings.insertData(JSON.stringify (args.format), args.data))
-		console.log(args.format.offline.header)
 		if(args.format.offline.header){statusEmbed.setTitle(strings.truncate(args.format.offline.header, 50, true))}
 		statusEmbed.setColor(args.format.offline.embedColor)
 		if(args.format.offline.footer){statusEmbed.setFooter({text: strings.truncate(args.format.offline.footer, 50, true)})}
@@ -31,7 +30,7 @@ function statusEmbed(args, stringJSON){
 	return statusEmbed
 } //end of makeEmbed
 
-function makeReply(msg, type, stringJSON) { //generates error and reply messages
+function makeReply(msg = 'Error message failed to load', type, stringJSON) { //generates error and reply messages
 	try{
 	var embedTitle
 	var embedColor

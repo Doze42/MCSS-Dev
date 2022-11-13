@@ -83,7 +83,7 @@ global.pool.on('error', err => {
 
 process.on('unhandledRejection', err => { //Logs error and restarts shard on unhandledRejection
 	global.toConsole.error('Reloading Shard: ' + err);
-	try{fs.writeFileSync('./logs/shardCrash/' + new Date().getTime() + '.log', err)}
+	try{fs.writeFileSync('./logs/shardCrash/' + new Date().getTime() + '.log', err.toString())}
 	catch(err){global.toConsole.error('Failed to write error log')}
 	client.shard.restart(client.shard.id);
 });
@@ -112,6 +112,7 @@ try {
 		else{var lang = getLang((JSON.parse(guildData[0].CONFIG)).lang)}
 		conn.release()}
 	}
+	else{var lang = getLang('en')} //defaults to english for direct messages
 	{let conn = await global.pool.getConnection();
 	var userData = (await conn.query('SELECT * FROM USERS WHERE ID = ' + interaction.user.id + ' LIMIT 1')).slice(0, -1)[0]
 	conn.release();}
@@ -201,7 +202,7 @@ async function processQueue(){ //todo: add try/catch
 					catch(err){ //Panel failed, log
 						if (panelData.failureCount >= global.botConfig.configs[global.botConfig.release].liveElementMaxFails || err == 'remove'){
 						{let conn = await global.pool.getConnection();
-						await conn.query("DELETE FROM LIVE WHERE guid = '" + element.guid)
+						await conn.query("DELETE FROM LIVE WHERE guid = '" + element.guid + "'")
 						conn.release();}
 						toConsole.log('Panel with ID ' + element.messageID + ' has been removed due to failure count or channel issues.')}
 						else{panelData.failureCount++
