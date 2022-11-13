@@ -4,6 +4,7 @@
 	"debugMode": 1,
 	"shardCount": 1,
 	"crashLimit": 25,
+	"maxAttachmentSize": 5000000,
 	"cmdCD": 7000,
 	"sugCD": 900000,
 	"enableMessageEdit": true,

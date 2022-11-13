@@ -29,11 +29,12 @@ const channelEdit = require('./funcs/channelEdit.js')
 const panelEdit = require('./funcs/panelEdit.js')
 const loadDefaults = require('./funcs/loadDefaults.js')
 const getLang = require('./funcs/getLang.js').getLang
+const queryServer = require('./funcs/queryServer.js'); //ping library
 
 global.staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
 
 
-var stringJSON = getLang('en')
+var stringJSON = getLang('en') //remove this later !!
 
 
 
@@ -47,7 +48,8 @@ automsg: require('./commands/automsg'),
 autocnl: require('./commands/autocnl'),
 admin: require('./commands/admin'),
 help: require('./commands/help'),
-embeds: require('./commands/embeds')
+embeds: require('./commands/embeds'),
+test: require('./commands/test')
 }
 
 global.shardInfo = {
@@ -128,9 +130,7 @@ try {
 	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
-	else if (interaction.commandName == 'test'){
-
-	}
+	else if (interaction.commandName == 'test'){{commands.test.run(client, interaction, lang.strings);}}
 }
 catch (err){global.toConsole.error("Interaction Failed: " + err)}
 })
@@ -144,6 +144,10 @@ async function liveStatus(){
 	var i = 0;
 	var elements = new Map();
 	for (var i = 0; i < dbData.length; i++){if(client.guilds.cache.has(dbData[i].serverID)){elements.set(dbData[i].guid, dbData[i])}}
+	var servers = new Set();
+	for await (const [key, value] of elements){servers.add(JSON.parse(value.data).ip)}
+	//console.log(servers.entries())
+	//await servers.forEach((ip) => {})
 	for await (const [key, value] of elements){
 		try{
 			var data = JSON.parse(value.data);

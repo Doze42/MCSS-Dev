@@ -3,7 +3,6 @@
 		"default": 0,
 		"templates": [{
 				"alias": "Default Template",
-				"default": true,
 				"thumbnailEnable": true,
 				"online": {
 					"header": "Statut de %ip%",
@@ -26,7 +25,6 @@
 			},
 			{
 				"alias": "Default Template (Live)",
-				"default": false,
 				"thumbnailEnable": true,
 				"online": {
 					"header": "Statut de %ip%",
