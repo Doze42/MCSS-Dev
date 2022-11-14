@@ -30,6 +30,7 @@ const panelEdit = require('./funcs/panelEdit.js')
 const loadDefaults = require('./funcs/loadDefaults.js')
 const getLang = require('./funcs/getLang.js').getLang
 const queryServer = require('./funcs/queryServer.js'); //ping library
+const processPingQueue = require('./funcs/processPingQueue.js');
 
 global.staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
 
@@ -130,7 +131,10 @@ try {
 	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
-	else if (interaction.commandName == 'test'){{commands.test.run(client, interaction, lang.strings);}}
+	else if (interaction.commandName == 'test'){
+	processPingQueue.process()
+	//commands.test.run(client, interaction, lang.strings);
+	}
 }
 catch (err){global.toConsole.error("Interaction Failed: " + err)}
 })
@@ -146,6 +150,7 @@ async function liveStatus(){
 	for (var i = 0; i < dbData.length; i++){if(client.guilds.cache.has(dbData[i].serverID)){elements.set(dbData[i].guid, dbData[i])}}
 	var servers = new Set();
 	for await (const [key, value] of elements){servers.add(JSON.parse(value.data).ip)}
+	//processPingQueue.process(Array.from(servers))
 	//console.log(servers.entries())
 	//await servers.forEach((ip) => {})
 	for await (const [key, value] of elements){
@@ -157,7 +162,7 @@ async function liveStatus(){
 		}
 		catch(err){continue;} //handle this error right
 				if (res.update){
-					toConsole.debug('Adding panel ' + data.messageID + ' to queue...')
+					toConsole.debug('Adding panel ' + key + ' to queue...')
 					statusQueue.push({
 						type: 'panel',
 						guid: value.guid,

@@ -1,26 +1,27 @@
 //Invite Command
 const fs = require('fs');
 const Discord = require('discord.js') //discord.js for embed object
-const staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
-const axios = require('axios')
-const sharp = require('sharp')
+const jimp = require ('jimp')
+//const sharp = require('sharp')
 module.exports = {run}
 
 async function run(client, interaction, stringJSON){
 try{
 global.toConsole.log('/invite run by ' + interaction.user.username + '#' + interaction.user.discriminator + ' (' + interaction.user.id + ')')
 global.shardInfo.commandsRun++
-
+await interaction.deferReply()
 var attachment = interaction.options.getAttachment('att')
 console.log(attachment)
 if (!(attachment.contentType == 'image/png' || attachment.contentType == 'image/jpeg')){await interaction.reply('not supported')}
 if (attachment.size > global.botConfig.maxAttachmentSize){await interaction.reply('ahh noo too big owo')}
-try{
-var buf = await axios.get(attachment.url, {responseType: 'arraybuffer'}).then(res => Buffer.from(res.data, 'binary').toString('base64'), 'base64')
-var bufferSource = await sharp(Buffer.from(buf).resize({width: 256, height: 256, fit: 'fill'}).toBuffer('base64')).toString('base64')
-}catch(err){console.log(err)}
-await interaction.reply({files: [new Discord.MessageAttachment(Buffer.from(bufferSource, 'base64'), 'logo.png')]})
-//bufferSource = (await sharp(Buffer.from(await axios.get(attachments[0].url, {responseType: 'arraybuffer'}).then(res => Buffer.from(res.data, 'binary').toString('base64')), 'base64')).resize({width: 256, height: 256, fit: 'fill'}).toBuffer('base64')).toString('base64')
+	var bufferSource
+await jimp.read(attachment.url).then(image => {
+	image.resize(128, 128)
+	image.getBase64Async(jimp.MIME_PNG).then(b64 => {bufferSource = b64})
+	})
+	console.log((bufferSource.slice(22)))
+await interaction.editReply({files: [new Discord.MessageAttachment(Buffer.from(bufferSource.slice(22), 'base64'), 'logo.png')]})
+
 }
 catch(err){
 console.log('Error!')

@@ -5,7 +5,8 @@ module.exports = {run}
 const queryServer = require('../funcs/queryServer.js');
 const Discord = require('discord.js') //discord.js for embed object
 const strings = require('../funcs/strings'); //public string manipulation functions
-const compat = require ('../funcs/compat.js');
+const compat = require('../funcs/compat.js');
+const jimp = require('jimp');
 
 async function run(client, interaction, stringJSON){
 try{
@@ -18,10 +19,11 @@ try{
 	var serverPort = interaction.options.getInteger('port');
 	var embedTemplate = interaction.options.getString('embeds');
 	var serverAlias = interaction.options.getString('server');
+	//var attachment = interaction.options.getAttachment('thumbnail')
 	if(!interaction.inGuild()){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.noDM, 'error', stringJSON)], ephemeral: true})} //disallows DM channels
 	if(!client.guilds.cache.has(interaction.guildId)){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.botScope, 'error', stringJSON)], ephemeral: true})} //bot scope
 	if (interaction.channel.type !== 'GUILD_TEXT') {return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.channelType, 'error', stringJSON)], ephemeral: true})} //news or announcement channels
-	if (!interaction.channel.permissionsFor(interaction.client.user.id).has(["SEND_MESSAGES", "EMBED_LINKS", "ATTACH_FILES"])){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.channelPerms, 'error', stringJSON)], ephemeral: true})}
+	if (!interaction.channel.permissionsFor(interaction.client.user.id).has(["SEND_MESSAGES", "EMBED_LINKS", "ATTACH_FILES", "VIEW_CHANNEL"])){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.channelPerms, 'error', stringJSON)], ephemeral: true})}
 	if (interaction.user.PermissionLevel == 0 && !interaction.member.permissions.has("ADMINISTRATOR")){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.restricted, 'error', stringJSON)], ephemeral: true})}
 	{let conn = await global.pool.getConnection();
 	if((await conn.query("SELECT * from LIVE WHERE serverID = " + interaction.guildId)).slice(0, -1).length >= JSON.parse(dbData.CONFIG).limits.liveElements){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.maxElements, 'error', stringJSON)], ephemeral: true})} //checks live element limits
