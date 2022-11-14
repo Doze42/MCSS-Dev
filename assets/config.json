@@ -48,7 +48,7 @@
 		},
 		{
 			"dbConfig": {
-				"host": "192.168.0.6",
+				"host": "vulpes.netbvh.com",
 				"user": "mcss_alpha",
 				"password": "xQ365BB$Eyq0",
 				"database": "mcss_alpha",

@@ -18,8 +18,8 @@
     "fs": "^0.0.1-security",
     "kurasuta": "^3.0.1",
     "lodash.isequal": "^4.5.0",
-    "mariadb": "^3.0.1",
-    "sharp": "^0.29.3",
+    "mariadb": "^3.0.2",
+    "sharp": "^0.31.2",
     "systeminformation": "^5.9.2"
   }
 }
