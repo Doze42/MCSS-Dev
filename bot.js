@@ -30,13 +30,11 @@ const panelEdit = require('./funcs/panelEdit.js')
 const loadDefaults = require('./funcs/loadDefaults.js')
 const getLang = require('./funcs/getLang.js').getLang
 const queryServer = require('./funcs/queryServer.js'); //ping library
+const dbAudit = require('./funcs/dbAudit.js');
 
 global.staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
 
-
 var stringJSON = getLang('en') //remove this later !!
-
-
 
 //Commands
 const commands = {
@@ -95,11 +93,22 @@ client.on('rateLimit', (info) => {
   console.log(info)
 })
 
+
+
 client.on("ready", async function(){
 	global.toConsole.info('Successfully logged in using Token ' + botConfig.release + ' at ' + new Date())
 	if(global.botConfig.enableMessageEdit || global.botConfig.enableChannelEdit || global.botConfig.enableNotifer){liveStatus()} //starts live update loop
 	client.user.setActivity(global.botConfig.configs[global.botConfig.release].activity.text, {type: global.botConfig.configs[global.botConfig.release].activity.type});
 })
+
+client.on('guildDelete', (guild) => {});
+client.on('channelDelete', (channel) => {console.log('c')});
+client.on('messageDelete', (message) => {dbAudit.messageDelete([message])});
+client.on('messageDeleteBulk', (messages) => {
+	let messageArray = []
+	messages.forEach((message) => {messageArray.push(message)})
+	dbAudit.messageDelete(messageArray)
+});
 
 client.on('interactionCreate', async function (interaction){
 try {
