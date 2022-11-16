@@ -1,5 +1,5 @@
 {
-	"botver": "3.1 (Beta Build 200)",
+	"botver": "3.1 (Beta Build 210)",
 	"release": 2,
 	"debugMode": 1,
 	"shardCount": 1,
@@ -7,6 +7,10 @@
 	"maxAttachmentSize": 5000000,
 	"cmdCD": 7000,
 	"sugCD": 900000,
+	"concurrentPing": {
+		"enable": true,
+		"pings": 10
+	},
 	"enableMessageEdit": true,
 	"enableChannelEdit": false,
 	"enableNotifier": false,
@@ -25,7 +29,7 @@
 			"supportServer": "799882620913319957",
 			"suggestionChannel": "799890506757963857",
 			"expressPort": 4889,
-			"liveQueuePause": 2000,
+			"liveQueuePause": 3000,
 			"liveElementTimeout": 6000,
 			"liveElementMaxFails": 15
 		},
@@ -48,11 +52,11 @@
 		},
 		{
 			"dbConfig": {
-				"host": "vulpes.netbvh.com",
+				"host": "192.168.0.6",
 				"user": "mcss_alpha",
 				"password": "xQ365BB$Eyq0",
 				"database": "mcss_alpha",
-				"connectionLimit": 25
+				"connectionLimit": 10
 			},
 			"token": "NjgxMzU1MDczMTc5MDkwOTY1.Xngc8g.9ATtVcd-iTw0oHUFTJ-TsUMuR2Q",
 			"activity": {"text": "Doze work on me", "type": "WATCHING"},

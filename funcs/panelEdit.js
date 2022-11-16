@@ -44,8 +44,8 @@ return new Promise(async(resolve, reject) => {
 				}, stringJSON);
 			}
 		}
-			if(!isEqual({title: statEmbed.title.toString(), description: statEmbed.description.toString(), fields: statEmbed.fields, footer: statEmbed.footer.text.toString()},
-			{title: element.lastState.title.toString(), description: element.lastState.description.toString(), fields: element.lastState.fields, footer: element.lastState.footer.text.toString()}))
+			if(!isEqual(JSON.stringify({title: statEmbed.title, description: statEmbed.description, fields: statEmbed.fields, footer: statEmbed.footer}),
+			JSON.stringify({title: element.lastState.title, description: element.lastState.description, fields: element.lastState.fields, footer: element.lastState.footer})))
 			{resolve ({update: true, data: statEmbed, disable: disable})}
 			else {resolve ({update: false, disable: disable});}
 	}

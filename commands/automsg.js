@@ -19,7 +19,7 @@ try{
 	var serverPort = interaction.options.getInteger('port');
 	var embedTemplate = interaction.options.getString('embeds');
 	var serverAlias = interaction.options.getString('server');
-	//var attachment = interaction.options.getAttachment('thumbnail')
+	var thumbnail = interaction.options.getAttachment('thumbnail')
 	if(!interaction.inGuild()){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.noDM, 'error', stringJSON)], ephemeral: true})} //disallows DM channels
 	if(!client.guilds.cache.has(interaction.guildId)){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.botScope, 'error', stringJSON)], ephemeral: true})} //bot scope
 	if (interaction.channel.type !== 'GUILD_TEXT') {return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.channelType, 'error', stringJSON)], ephemeral: true})} //news or announcement channels
@@ -50,12 +50,20 @@ try{
 	var embedData = JSON.parse(dbData.EMBEDS).templates.filter((obj) => obj.alias == embedTemplate)
 	if (!embedData.length) {return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.automsg.embedNotFound, 'error', stringJSON)], ephemeral: true})}
 	await interaction.deferReply({ephemeral: true});
-
 	var bufferSource = global.staticImages.pack;
-
-	try {var pingResults = await queryServer(serverIP, parseInt(serverPort))
-		if (await compat.check(pingResults, JSON.parse(dbData.COMPAT))){throw stringJSON.status.compatOffline;};
-		if (pingResults.favicon){bufferSource = pingResults.favicon.split(';base64,').pop();}
+	if(thumbnail){
+			if (!(thumbnail.contentType == 'image/png' || thumbnail.contentType == 'image/jpeg' || thumbnail.contentType == 'image/gif' || thumbnail.contentType == 'image/bmp')){return interaction.editReply({embeds:[richEmbeds.makeReply(stringJSON.automsg.badThumbnail, 'error', stringJSON)], ephemeral: true})}; //Checks for correct format
+			if (thumbnail.size > global.botConfig.maxAttachmentSize){return interaction.editReply({embeds:[richEmbeds.makeReply(stringJSON.automsg.badThumbnail, 'error', stringJSON)], ephemeral: true})}; //checks thumbnail size
+			await jimp.read(thumbnail.url).then(image => {
+			image.resize(64, 64)
+			image.getBase64Async(jimp.MIME_PNG).then(b64 => {bufferSource = b64.split(';base64,').pop()})
+			})
+			var customThumb = true;
+		}
+	try {
+		var pingResults = await queryServer(serverIP, parseInt(serverPort))		
+		if (pingResults.favicon && !customThumb){bufferSource = pingResults.favicon.split(';base64,').pop();}
+		if (await compat.check(pingResults, JSON.parse(dbData.COMPAT))){throw stringJSON.status.compatOffline;};		
 		pingResults.error = "Ping Successful"
 		var statEmbed = richEmbeds.statusEmbed({
 		online: true,

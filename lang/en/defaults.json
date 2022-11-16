@@ -29,7 +29,7 @@
 				"online": {
 					"header": "Status for %ip%",
 					"footer": "Last Updated",
-					"body": ":green_circle: Server is online \n \n **Type:** %type% \n **MOTD:** %motd% \n **Version:** %version% \n **Maximum Players:** %max% \n **Currently Online:** %now% \n **Latency:** %ping% ms \n **Open Slots:** %open%",
+					"body": ":green_circle: Server is online \n \n **Type:** %type% \n **MOTD:** %motd% \n **Version:** %version% \n **Maximum Players:** %max% \n **Currently Online:** %now% \n **Open Slots:** %open%",
 					"playersList": {
 						"header": "Players:",
 						"display": true

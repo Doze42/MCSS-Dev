@@ -30,7 +30,6 @@ const panelEdit = require('./funcs/panelEdit.js')
 const loadDefaults = require('./funcs/loadDefaults.js')
 const getLang = require('./funcs/getLang.js').getLang
 const queryServer = require('./funcs/queryServer.js'); //ping library
-const processPingQueue = require('./funcs/processPingQueue.js');
 
 global.staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
 
@@ -92,7 +91,8 @@ process.on('unhandledRejection', err => { //Logs error and restarts shard on unh
 });
 
 client.on('rateLimit', (info) => {
-  global.toConsole.error(`Rate limit hit ${info.timeDifference ? info.timeDifference : info.timeout ? info.timeout: 'Unknown timeout '}`)
+  global.toConsole.error('Rate limit hit')
+  console.log(info)
 })
 
 client.on("ready", async function(){
@@ -132,8 +132,8 @@ try {
 	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'test'){
-	processPingQueue.process()
-	//commands.test.run(client, interaction, lang.strings);
+	//processPingQueue.process()
+	commands.test.run(client, interaction, lang.strings);
 	}
 }
 catch (err){global.toConsole.error("Interaction Failed: " + err)}
@@ -149,10 +149,29 @@ async function liveStatus(){
 	var elements = new Map();
 	for (var i = 0; i < dbData.length; i++){if(client.guilds.cache.has(dbData[i].serverID)){elements.set(dbData[i].guid, dbData[i])}}
 	var servers = new Set();
-	for await (const [key, value] of elements){servers.add(JSON.parse(value.data).ip)}
-	//processPingQueue.process(Array.from(servers))
-	//console.log(servers.entries())
-	//await servers.forEach((ip) => {})
+	if(global.botConfig.concurrentPing.enable){ //Concurrent ping
+		for await (const [key, value] of elements){servers.add(JSON.parse(value.data).ip)}
+		var pingQueue = Array.from(servers)
+		while(pingQueue.length){
+			let pingSet = pingQueue.splice(0, global.botConfig.concurrentPing.pings)
+			let pingPromises = []
+			await pingSet.forEach((ip) => {
+				pingPromises.push(new Promise(async(resolve, reject) => {
+					try {
+						toConsole.debug('Concurrent Ping: ' + ip)
+						var pingResults = await queryServer(ip)
+						global.statusCache.set(ip, {online: true, data: pingResults})
+						resolve()
+					}
+					catch(err){
+					global.statusCache.set(ip, {online: false, data: err})
+					resolve()
+					}
+				}))
+			})
+			await Promise.all(pingPromises)
+		}
+	}
 	for await (const [key, value] of elements){
 		try{
 			var data = JSON.parse(value.data);
@@ -179,6 +198,7 @@ async function liveStatus(){
 			//else if (element.type == 'channel') {channelEdit.check(element)}
 			//else if (element.type == 'notifier') {liveNotifier.check(element)}
 			
+	toConsole.debug('Clearing StatusCache')
 	statusCache.clear(); //clears cached server status data
 	global.toConsole.debug(statusQueue.length + ' elements in queue')
 	if(statusQueue.length){await processQueue();}

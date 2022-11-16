@@ -54,6 +54,7 @@
 	"success": "The Live Status Panel was generated successfully.",
 	"defaultTemplateLive": "Default Template (Live)",
 	"channelType": "The **automsg** command can only be used in regular server text channels.",
+	"badThumbnail": "Your thumbnail must be under 5MB in size and in BMP, GIF, JPEG or PNG format.",
 	"maxElements": "The maximum number of Live Status elements for this guild has been reached. Please delete one and try again or request higher limits in the support server.",
 	"disabled": {
 		"deadPanel": "The Minecraft server has been unreachable for over two weeks and this Live Status Panel has been disabled.",
