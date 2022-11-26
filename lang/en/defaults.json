@@ -49,7 +49,7 @@
 	},
 	"config": {
 		"lang": "en",
-		"liveElementCount": 0,
+		"settingsPermissionLevel": ["ADMINISTRATOR"],
 		"limits": {
 			"liveElements": 25,
 			"savedServers": 10,
@@ -66,23 +66,38 @@
 	},
 	"compat": [{
 			"trigger": "This server is offline.",
-			"domain": "aternos.me"
+			"domain": "aternos.me",
+			"standard": true
 		},
 		{
 			"trigger": "Server not found.",
-			"domain": "aternos.me"
+			"domain": "aternos.me",
+			"standard": true
 		},
 		{
 			"trigger": "Start your server at www.minefort.com",
-			"domain": "minefort.com"
+			"domain": "minefort.com",
+			"standard": true
 		},
 		{
 			"trigger": "This server is currently starting.",
-			"domain": "aternos.me"
+			"domain": "aternos.me",
+			"standard": true
 		},
 		{
 			"trigger": "This server is OFFLINE!",
-			"domain" : "falixserver.net"
+			"domain" : "falixserver.net",
+			"standard": true
+		},
+		{
+			"trigger": "This server is OFFLINE!",
+			"domain" : "falixserver.net",
+			"standard": true
+		},
+		{
+			"trigger": "Dedicated Server",
+			"domain" : "apexmc.co",
+			"standard": true
 		}
 	]
 }

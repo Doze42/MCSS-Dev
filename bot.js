@@ -31,6 +31,7 @@ const loadDefaults = require('./funcs/loadDefaults.js')
 const getLang = require('./funcs/getLang.js').getLang
 const queryServer = require('./funcs/queryServer.js'); //ping library
 const dbAudit = require('./funcs/dbAudit.js');
+const { globalAgent } = require('http');
 
 global.staticImages = JSON.parse(fs.readFileSync("./assets/static_images.json")); //Base64 encoded images
 
@@ -47,6 +48,7 @@ autocnl: require('./commands/autocnl'),
 admin: require('./commands/admin'),
 help: require('./commands/help'),
 embeds: require('./commands/embeds'),
+compat: require('./commands/compat'),
 test: require('./commands/test')
 }
 
@@ -94,14 +96,19 @@ client.on('rateLimit', (info) => {
 })
 
 
+setInterval(() => {
+	if(client.isReady){global.toConsole.debug('Client Ready @ ' + new Date().getTime())}
+	else (global.toConsole.debug('Client Not Ready @ ' + new Date().getTime()))
+}, (20 * 60000))
 
 client.on("ready", async function(){
 	global.toConsole.info('Successfully logged in using Token ' + botConfig.release + ' at ' + new Date())
 	if(global.botConfig.enableMessageEdit || global.botConfig.enableChannelEdit || global.botConfig.enableNotifer){liveStatus()} //starts live update loop
 	client.user.setActivity(global.botConfig.configs[global.botConfig.release].activity.text, {type: global.botConfig.configs[global.botConfig.release].activity.type});
+	
 })
 
-client.on('guildDelete', (guild) => {});
+client.on('guildDelete', (guild) => {dbAudit.guildDelete(guild.id)});
 client.on('channelDelete', (channel) => {console.log('c')});
 client.on('messageDelete', (message) => {dbAudit.messageDelete([message])});
 client.on('messageDeleteBulk', (messages) => {
@@ -140,6 +147,7 @@ try {
 	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'compat'){commands.compat.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'test'){
 	//processPingQueue.process()
 	commands.test.run(client, interaction, lang.strings);

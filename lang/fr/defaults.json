@@ -65,24 +65,39 @@
 		"servers": []
 	},
 	"compat": [{
-			"trigger": "This server is offline.",
-			"domain": "aternos.me"
-		},
-		{
-			"trigger": "Server not found.",
-			"domain": "aternos.me"
-		},
-		{
-			"trigger": "Start your server at www.minefort.com",
-			"domain": "minefort.com"
-		},
-		{
-			"trigger": "This server is currently starting.",
-			"domain": "aternos.me"
-		},
-		{
-			"trigger": "This server is OFFLINE!",
-			"domain" : "falixserver.net"
-		}
-	]
+		"trigger": "This server is offline.",
+		"domain": "aternos.me",
+		"standard": true
+	},
+	{
+		"trigger": "Server not found.",
+		"domain": "aternos.me",
+		"standard": true
+	},
+	{
+		"trigger": "Start your server at www.minefort.com",
+		"domain": "minefort.com",
+		"standard": true
+	},
+	{
+		"trigger": "This server is currently starting.",
+		"domain": "aternos.me",
+		"standard": true
+	},
+	{
+		"trigger": "This server is OFFLINE!",
+		"domain" : "falixserver.net",
+		"standard": true
+	},
+	{
+		"trigger": "This server is OFFLINE!",
+		"domain" : "falixserver.net",
+		"standard": true
+	},
+	{
+		"trigger": "Dedicated Server",
+		"domain" : "apexmc.co",
+		"standard": true
+	}
+]
 }
