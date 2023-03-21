@@ -3,17 +3,19 @@
 module.exports = {run}
 const richEmbeds = require('../funcs/embeds'); //embed generation
 const Discord = require('discord.js') //discord.js for embed object
+const sql = require('mssql') //sql
 
 async function run(client, interaction, stringJSON){
 	global.shardInfo.commandsRun++
 	try{
 		if(!interaction.inGuild()){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.noDM, 'error', stringJSON)], ephemeral: true})}
 		var subCommand = interaction.options.getSubcommand()
-		{let conn = await global.pool.getConnection();
-		let dbData = (await conn.query("SELECT * from SERVERS WHERE SERVER_ID = " + interaction.guildId + " LIMIT 1"))[0];
+		//{let conn = await global.pool.getConnection();
+		//let dbData = (await conn.query("SELECT * from SERVERS WHERE SERVER_ID = " + interaction.guildId + " LIMIT 1"))[0];
+		var dbData = (await new sql.Request(global.pool).query('SELECT TOP 1 * from SERVERS WHERE SERVER_ID = ' + interaction.guildId)).recordset[0] //mssql
 		var compatData = JSON.parse(dbData.COMPAT);
 		var embedLimit = JSON.parse(dbData.CONFIG).limits.savedEmbedTemplates
-		conn.release();}
+		//conn.release();}
 		if (subCommand == 'add'){
 			global.toConsole.log('/embeds add run by ' + interaction.user.username + '#' + interaction.user.discriminator + ' (' + interaction.user.id + ')')
 			if(!client.guilds.cache.has(interaction.guildId)){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.permissions.botScope, 'error', stringJSON)], ephemeral: true})} //bot scope
@@ -49,9 +51,10 @@ async function run(client, interaction, stringJSON){
 					embedColor: options.offlineColorHex || options.offlineColor
 				}
 			});
-			{let conn = await global.pool.getConnection();
-			await conn.query(("UPDATE SERVERS SET EMBEDS = N'" + JSON.stringify(embedData).replace(/'/g, "''") + "' WHERE SERVER_ID = " + interaction.guildId).replace(/\\n/g, "\\\\n")) //writes embed data to database
-			conn.release();}
+			//{let conn = await global.pool.getConnection();
+			//await conn.query(("UPDATE SERVERS SET EMBEDS = N'" + JSON.stringify(embedData).replace(/'/g, "''") + "' WHERE SERVER_ID = " + interaction.guildId).replace(/\\n/g, "\\\\n")) //writes embed data to database
+			//conn.release();}
+			await new sql.Request(global.pool).query(`UPDATE SERVERS SET COMPAT = '${JSON.stringify(compatData).replace(/'/g, "''")} WHERE SERVER_ID = ${interaction.guildId}`)
 			interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.embedsCommand.templateAdded, 'notif', stringJSON)], ephemeral: false});
 			}
 		else if (subCommand == 'remove') {
@@ -61,10 +64,11 @@ async function run(client, interaction, stringJSON){
 			if (!compatData.length) //no entries
 			interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.embedsCommand.templateRemoved + embedData.templates[removeIndex].alias, 'notif', stringJSON)]});
 			compatData.splice(removeIndex, 1);
-			{let conn = await global.pool.getConnection();
-			conn.query((`UPDATE SERVERS SET COMPAT = '${JSON.stringify(compatData).replace(/'/g, "''")}' WHERE SERVER_ID = ${interaction.guildId}`).replace(/\\n/g, "\\\\n")) //writes automsg data to database	
-			conn.release();}			
-		}
+			//{let conn = await global.pool.getConnection();
+			//conn.query((`UPDATE SERVERS SET COMPAT = '${JSON.stringify(compatData).replace(/'/g, "''")}' WHERE SERVER_ID = ${interaction.guildId}`).replace(/\\n/g, "\\\\n")) //writes automsg data to database	
+			//conn.release();}	
+			await new sql.Request(global.pool).query(`UPDATE SERVERS SET COMPAT = '${JSON.stringify(compatData).replace(/'/g, "''")}' WHERE SERVER_ID = ${interaction.guildId}`)
+		}	
 		else if (subCommand == 'list'){
 			global.toConsole.log(`/compat list run by ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`)
 			if (!compatData.length){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.embedsCommand.noSaved, 'error', stringJSON)], ephemeral: true})};

@@ -1,4 +1,3 @@
-const fs = require('fs') //filesystem access
 const Discord = require('discord.js') //discord.js for embed object
 const strings = require('./strings') //string manipulation
 module.exports = {statusEmbed, makeReply}

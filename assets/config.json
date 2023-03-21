@@ -1,5 +1,5 @@
 {
-	"botver": "3.1 (Beta Build 210)",
+	"botver": "3.1 (Beta Build 215)",
 	"release": 2,
 	"debugMode": 1,
 	"shardCount": 1,
@@ -8,7 +8,7 @@
 	"cmdCD": 7000,
 	"sugCD": 900000,
 	"concurrentPing": {
-		"enable": true,
+		"enable": false,
 		"pings": 10
 	},
 	"enableMessageEdit": true,
@@ -23,6 +23,14 @@
 				"password": "xQ365BB$Eyq0",
 				"database": "mcss_alpha",
 				"connectionLimit": 25
+			},
+			"mssql": {
+				"server": "localhost:\\SQLEXPRESS",
+				"port": 1433,
+				"user": "MCdba",
+				"password": "Comment678",
+				"database": "MCSS",
+				"options": {"enableArithAbort": false, "trustServerCertificate": true}
 			},
 			"token": "NjUyNzI2MTA3NTM1MzEwODU5.GBDYLH.t5i4DNWPejCiB5elYR5f8RXjV9Z-t0ch5EbWmY",
 			"activity": {"text": "for slash commands | Back and better than ever!", "type": "WATCHING"},
@@ -41,6 +49,14 @@
 				"database": "mcss_beta",
 				"connectionLimit": 25
 			},
+			"mssql": {
+				"server": "localhost:\\SQLEXPRESS",
+				"port": 1433,
+				"user": "MCbeta",
+				"password": "Comment678",
+				"database": "MCSS_BETA",
+				"options": {"enableArithAbort": false, "trustServerCertificate": true}
+			},
 			"token": "NzkwMDc1Nzk2MDQyOTQwNDQ4.GBjx9F.KTWGgdfkE-Ozq6xcpB9VMbSYBiEGHLfOn6EKFg",
 			"activity": {"text": "my rise from the dead", "type": "WATCHING"},
 			"supportServer": "799882620913319957",
@@ -57,6 +73,14 @@
 				"password": "xQ365BB$Eyq0",
 				"database": "mcss_alpha",
 				"connectionLimit": 10
+			},
+			"mssql": {
+				"server": "192.168.0.3",
+				"port": 1433,
+				"user": "mcss_alpha",
+				"password": "xQ365BB$Eyq0",
+				"database": "MCSS_ALPHA",
+				"options": {"enableArithAbort": false, "trustServerCertificate": true}
 			},
 			"token": "NjgxMzU1MDczMTc5MDkwOTY1.Xngc8g.9ATtVcd-iTw0oHUFTJ-TsUMuR2Q",
 			"activity": {"text": "Doze work on me", "type": "WATCHING"},
