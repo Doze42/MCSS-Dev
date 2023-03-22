@@ -6,6 +6,7 @@ const fs = require ('fs')
 const config = JSON.parse(fs.readFileSync("./assets/config.json"))
 
 global.shardCrashCount = 0;
+global.botStartTime = new Date();
 
 setInterval(function(){global.shardCrashCount = 0}, 86400000) //resets shard reconnect count daily
 

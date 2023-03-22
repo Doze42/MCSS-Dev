@@ -29,6 +29,17 @@
 	"removeDefault": "You may not remove the default templates.",
 	"defaultPlayerHeading": "Players:"
 },
+"compatCommand": {
+	"triggerAdded": "Successfully added compatibility trigger to the database",
+	"badIndex":"Unable to locate a compatibility trigger with that index.",
+	"triggerRemoved":"Successfully removed compatibility trigger from the database.",
+	"listHeading": "Compatibility triggers for ",
+	"entry": "Entry",
+	"ipLength": "Your IP Address/Hostname must be between 5 and 253 characters. Please check your command and try again.",
+	"triggerLength": "Compatibility trigger length must be less than 50 characters.",
+	"maxTriggers": "Only 25 compatibility triggers are allowed per guild. Please delete one before continuing.",
+	"noSaved": "No compatibility mode triggers are configured in this guild."
+},
 "lang": {
 	"changeSuccess": "Language changed successfully"
 },
@@ -42,7 +53,7 @@
 },
 "status": {
 	"badPort": "Port argument must be between 1 and 65535. Please check your command and try again.",
-	"ipLength": "Your IP Address/Domain name must be between 5 and 253 characters. Please check your command and try again.",
+	"ipLength": "Your IP Address/Hostname must be between 5 and 253 characters. Please check your command and try again.",
 	"noServer": "No server specified. Please use the **server** option to select a saved server by its alias or use the **address** and **port** options to specify a different server.",
 	"aliasNotFound": "Unable to locate a saved server with that alias.",
 	"compatOffline": "Compatability Mode Triggered"
@@ -82,6 +93,38 @@
 "admin": {
 	"respawningAll": "Respawning all shards.",
 	"respawnOne": "Respawning shard "
+},
+"botstats":{
+	"badID": "Invalid Shard ID",
+	"info":{
+		"header": "***Bot Statistics***",
+		"servers": "**Servers: **",
+		"shards": "**Shards: **",
+		"version": "**Bot Version: **",
+		"uptime": "**Bot Uptime: **",
+		"crashCount": "**Shard Respawn Count: **"
+	},
+	"serverPerf":{
+		"header": "***Server Performance***",
+		"server": "**Server: **",
+		"cpu": "**CPU: **",
+		"ram": "**Memory: **"
+	},
+	"shardInfo":{
+		"header": "***Shard Info***",
+		"id": "**Shard ID: **",
+		"guilds": "**Guilds Handled: **",
+		"uptime": "**Shard Uptime: **",
+		"commands": "**Commands Processed (since last respawn): **",
+		"liveTime": "**Live Status Loop Time (seconds): **"
+	},
+	"modules": {
+		"header": "***Module States***",
+		"panelEdit": "**Panel Edit Live Status: **",
+		"channelEdit": "**Channel Edit Live Status: **",
+		"notifier": "**Notifier Live Status: **",
+		"concurrentPing": "**Concurrent Server Query: **"
+	}
 }
 
 }

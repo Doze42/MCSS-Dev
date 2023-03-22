@@ -123,7 +123,7 @@ client.on("ready", async function(){
 })
 
 client.on('guildDelete', (guild) => {dbAudit.guildDelete(guild.id)});
-client.on('channelDelete', (channel) => {console.log('c')});
+client.on('channelDelete', (channel) => {dbAudit.channelDelete(channel)});
 client.on('messageDelete', (message) => {dbAudit.messageDelete([message])});
 client.on('messageDeleteBulk', (messages) => {
 	let messageArray = []
@@ -165,8 +165,8 @@ try {
 	else if (interaction.commandName == 'help'){commands.help.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
-	//else if (interaction.commandName == 'compat'){commands.compat.run(client, interaction, lang.strings);}
-	//else if (interaction.commandName == 'test'){commands.test.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'compat'){commands.compat.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'test'){commands.test.run(client, interaction, lang.strings);}
 }
 catch (err){global.toConsole.error("Interaction Failed: " + err)}
 })

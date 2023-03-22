@@ -50,10 +50,12 @@
 	"config": {
 		"lang": "en",
 		"settingsPermissionLevel": ["ADMINISTRATOR"],
+		"deletionFailureCount": 0,
 		"limits": {
 			"liveElements": 25,
 			"savedServers": 10,
-			"savedEmbedTemplates": 10
+			"savedEmbedTemplates": 10,
+			"compatibilityTriggers": 25
 		},
 		"ephemeral": {
 			"statusPanel": false,

@@ -2,7 +2,7 @@
 	"botver": "3.1 (Beta Build 215)",
 	"release": 2,
 	"debugMode": 1,
-	"shardCount": 1,
+	"shardCount": 2,
 	"crashLimit": 25,
 	"maxAttachmentSize": 5000000,
 	"cmdCD": 7000,
