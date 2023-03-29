@@ -10,6 +10,8 @@ const fr = {
 	defaults: JSON.parse(fs.readFileSync("./lang/fr/defaults.json"))
 }
 
+
+
 function getLang(locale){
 	switch(locale){
 	case 'fr':

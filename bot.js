@@ -13,6 +13,7 @@ global.botConfig = JSON.parse(fs.readFileSync("./assets/config.json")); //Settin
 //servers.js
 //compat.js(command)
 //embeds.js(command)
+//settings.js
 //npm remove mssql and uuid when done
 
 //const sql = require('mariadb')
@@ -63,7 +64,7 @@ admin: require('./commands/admin'),
 help: require('./commands/help'),
 embeds: require('./commands/embeds'),
 compat: require('./commands/compat'),
-test: require('./commands/test')
+settings: require('./commands/settings')
 }
 
 global.shardInfo = {
@@ -166,7 +167,7 @@ try {
 	else if (interaction.commandName == 'embeds'){commands.embeds.run(client, interaction, lang.strings);}
 	//else if (interaction.commandName == 'autocnl'){commands.autocnl.run(client, interaction, lang.strings);}
 	else if (interaction.commandName == 'compat'){commands.compat.run(client, interaction, lang.strings);}
-	else if (interaction.commandName == 'test'){commands.test.run(client, interaction, lang.strings);}
+	else if (interaction.commandName == 'settings'){commands.settings.run(client, interaction, lang.strings);}
 }
 catch (err){global.toConsole.error("Interaction Failed: " + err)}
 })

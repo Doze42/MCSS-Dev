@@ -54,6 +54,7 @@ async function run(client, interaction, stringJSON){
 			}, stringJSON)
 
 			if (embedData.thumbnailEnable){await interaction.editReply({embeds:[statEmbed], files: [new Discord.MessageAttachment(Buffer.from(bufferSource, 'base64'), 'favicon.png')]})}
+			else {await interaction.editReply({embeds:[statEmbed]})}
 		}
 		catch(err){ //Server Offline
 			var statEmbed = richEmbeds.statusEmbed({
@@ -63,6 +64,7 @@ async function run(client, interaction, stringJSON){
 				format: embedData
 		}, stringJSON);
 		if (embedData.thumbnailEnable){await interaction.editReply({embeds:[statEmbed], files: [new Discord.MessageAttachment(Buffer.from(global.staticImages.pack_greyscale, 'base64'), 'favicon.png')]})}
+		else {await interaction.editReply({embeds:[statEmbed]})}
 		}
 	}
 	catch(err){

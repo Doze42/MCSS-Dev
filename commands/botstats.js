@@ -11,7 +11,9 @@ async function run(client, interaction, stringJSON){
 	try{
 		global.shardInfo.commandsRun++
 		global.toConsole.log(`/botstats run by ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`)
-		let cpu = await si.cpu()
+		let os = await si.osInfo().then(data => data.platform)
+		let cpu = {"manufacturer": "Unknown", "brand": "Unknown", "speed": "NaN", "currentLoad": "NaN"} //Workaround for Windows
+		if (os == "linux"){cpu = await si.cpu()}	
 		let mem = await si.mem()
 		let shardID = client.shard.id;
 		if (interaction.options.getInteger('shard') !== null){

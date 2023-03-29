@@ -14,12 +14,13 @@
 	"listDefault": " **(Default)**",
 	"aliasTaken": "A saved server with that alias already exists in this guild.",
 	"ipLength": "Your IP Address/Domain name must be between 5 and 253 characters. Please check your command and try again.",
-	"badPort": "Port argument must be between 1 and 65535. Please check your command and try again."
+	"badPort": "Port argument must be between 1 and 65535. Please check your command and try again.",
+	"server": "Server"
 },
 "embedsCommand": {
 	"aliasLength": "Embed alias length must be less than 50 characters.",
 	"maxTemplates": "Only 10 embed templates are allowed per guild. Please delete one before continuing.",
-	"aliasNotFound": "Unable to locate a saved server with that alias.",
+	"aliasNotFound": "Unable to locate a saved embed template with that alias.",
 	"aliasTaken": "An embed template with that alias already exists in this guild.",
 	"listDefault": " **(Default)**",
 	"listHeading": "Embed templates for ",
@@ -27,7 +28,25 @@
 	"templateAdded": "Successfully added template to the database.",
 	"noBlank": "You must specify a header, footer or body text for online and offline embeds.",
 	"removeDefault": "You may not remove the default templates.",
-	"defaultPlayerHeading": "Players:"
+	"defaultPlayerHeading": "Players:",
+	"invalidHexCode": "The color code entered is invalid. Color code must begin with # and cointain hexidecimal characters.",
+	"embed": "Embed",
+	"previewOnlineSampleData":{
+		"ip": "example.com",
+		"type": "Java",
+		"motd": "A Minecraft Server",
+		"version": "1.7.10",
+		"players":{
+			"online": 3,
+			"max": 10,
+			"list": [{"name": "Player 1"}, {"name": "Player 2"}, {"name": "Player 3"}]
+			},
+		"latency": 128		
+	},
+	"previewOfflineSampleData":{
+		"ip": "example.com",
+		"error": "Unable to reach server"
+	}
 },
 "compatCommand": {
 	"triggerAdded": "Successfully added compatibility trigger to the database",
@@ -93,6 +112,9 @@
 "admin": {
 	"respawningAll": "Respawning all shards.",
 	"respawnOne": "Respawning shard "
+},
+"settings": {
+	"lang": "Successfully changed the language to **English**."
 },
 "botstats":{
 	"badID": "Invalid Shard ID",

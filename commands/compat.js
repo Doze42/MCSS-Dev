@@ -67,7 +67,7 @@ async function run(client, interaction, stringJSON){
 	}
 	catch(err){
 	console.log('Error!')
-	console.log({command: 'embeds',
+	console.log({command: 'compat',
 	error: err})
 	}	
 }
