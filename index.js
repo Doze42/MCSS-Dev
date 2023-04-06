@@ -14,7 +14,7 @@ const sharder = new ShardingManager(join(__dirname, 'bot'), {
 	clusterCount: config.shardCount,
 	shardCount: config.shardCount,
 	timeout: 30000,
-	clientOptions: {partials: ['MESSAGE'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]},
+	clientOptions: {partials: ['MESSAGE'], intents: 513},
 	ipcSocket: 9999
 });
 

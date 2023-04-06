@@ -2,7 +2,7 @@
 
 module.exports = {run}
 const richEmbeds = require('../funcs/embeds'); //embed generation
-const Discord = require('discord.js') //discord.js for embed object
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js'); //discord.js for embed object
 const sql = require('mssql'); //mssql
 
 async function run(client, interaction, stringJSON){
@@ -108,10 +108,12 @@ async function run(client, interaction, stringJSON){
 			else {var embedName = embedData.templates[i].alias}
 			embedText.push(embedName)
 			}
-			var listEmbed = new Discord.MessageEmbed()
-			.setDescription(embedText.join('\n'))
-			.setTitle(stringJSON.servers.listHeading + interaction.guild.name)
-			interaction.reply({embeds:[listEmbed]})
+			interaction.reply({embeds:[
+				new EmbedBuilder({
+					"description": embedText.join('\n'),
+					"title": stringJSON.embedsCommand.listHeading + interaction.guild.name
+				}).data
+			]})
 		}
 		else if (subCommand == 'preview'){
 			global.toConsole.log(`/embeds preview run by ${interaction.user.username}#${interaction.user.discriminator} (${interaction.user.id})`)
@@ -131,7 +133,7 @@ async function run(client, interaction, stringJSON){
 				data: stringJSON.embedsCommand.previewOfflineSampleData,
 				format: embedData.templates[previewIndex]
 			}, stringJSON);
-			if (embedData.templates[previewIndex].thumbnailEnable){interaction.reply({embeds:[onlineEmbed, offlineEmbed], files: [new Discord.MessageAttachment(Buffer.from(global.staticImages.pack, 'base64'), 'favicon.png')]})}
+			if (embedData.templates[previewIndex].thumbnailEnable){interaction.reply({embeds:[onlineEmbed, offlineEmbed], files: [new AttachmentBuilder(Buffer.from(global.staticImages.pack, 'base64'), {name: 'favicon.png'})]})}
 			else {await interaction.reply({embeds:[onlineEmbed, offlineEmbed]})}
 		}
 	}

@@ -2,7 +2,7 @@
 
 module.exports = {run}
 const richEmbeds = require('../funcs/embeds'); //embed generation
-const Discord = require('discord.js') //discord.js for embed object
+const { EmbedBuilder, Embed } = require('discord.js'); //discord.js for embed object
 const sql = require('mssql') //sql
 
 async function run(client, interaction, stringJSON){
@@ -59,10 +59,12 @@ async function run(client, interaction, stringJSON){
 				if (compatData[i].standard){sectionHeader = `:robot: ${sectionHeader}`}
 				compatText.push(`**${sectionHeader}** \n Domain: ${compatData[i].domain} \n Trigger: ${compatData[i].trigger}`)
 			}
-			var listEmbed = new Discord.MessageEmbed()
-			.setDescription(compatText.join('\n'))
-			.setTitle(stringJSON.compatCommand.listHeading + interaction.guild.name)
-			interaction.reply({embeds:[listEmbed]})
+			interaction.reply({
+				embeds:[new EmbedBuilder({
+					"description": compatText.join('\n'),
+					"title": stringJSON.compatCommand.listHeading + interaction.guild.name
+				}).data
+			]})
 		}	
 	}
 	catch(err){

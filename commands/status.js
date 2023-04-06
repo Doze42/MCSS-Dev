@@ -5,7 +5,7 @@ const queryServer = require('../funcs/queryServer.js');
 const richEmbeds = require('../funcs/embeds') //embed generation
 const compat = require ('../funcs/compat.js');
 const strings = require('../funcs/strings.js') //string manipulation
-const Discord = require('discord.js') //discord.js for embed object
+const { AttachmentBuilder } = require('discord.js'); //discord.js for embed object
 const sql = require('mssql') //mssql
 module.exports = {run}
 
@@ -53,7 +53,7 @@ async function run(client, interaction, stringJSON){
 				format: embedData
 			}, stringJSON)
 
-			if (embedData.thumbnailEnable){await interaction.editReply({embeds:[statEmbed], files: [new Discord.MessageAttachment(Buffer.from(bufferSource, 'base64'), 'favicon.png')]})}
+			if (embedData.thumbnailEnable){await interaction.editReply({embeds:[statEmbed], files: [new AttachmentBuilder(Buffer.from(bufferSource, 'base64'), {name: 'favicon.png'})]})}
 			else {await interaction.editReply({embeds:[statEmbed]})}
 		}
 		catch(err){ //Server Offline
@@ -63,7 +63,7 @@ async function run(client, interaction, stringJSON){
 				data: {error: err, hostname: serverIP},
 				format: embedData
 		}, stringJSON);
-		if (embedData.thumbnailEnable){await interaction.editReply({embeds:[statEmbed], files: [new Discord.MessageAttachment(Buffer.from(global.staticImages.pack_greyscale, 'base64'), 'favicon.png')]})}
+		if (embedData.thumbnailEnable){await interaction.editReply({embeds:[statEmbed], files: [new AttachmentBuilder(Buffer.from(global.staticImages.pack_greyscale, 'base64'), {name: 'favicon.png'})]})}
 		else {await interaction.editReply({embeds:[statEmbed]})}
 		}
 	}

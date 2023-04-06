@@ -2,7 +2,7 @@
 
 module.exports = {run}
 const richEmbeds = require('../funcs/embeds'); //embed generation
-const Discord = require('discord.js') //discord.js for embed object
+const { EmbedBuilder } = require('discord.js'); //discord.js for embed object
 const sql = require('mssql') //mssql
 
 async function run(client, interaction, stringJSON){
@@ -75,10 +75,12 @@ async function run(client, interaction, stringJSON){
 				value: fieldText
 			})
 			}
-			var listEmbed = new Discord.MessageEmbed()
-			.addFields(embedFields)
-			.setTitle(stringJSON.servers.listHeading + interaction.guild.name)
-			interaction.reply({embeds:[listEmbed]})
+			interaction.reply({embeds:[
+				new EmbedBuilder({
+					"title": stringJSON.servers.listHeading + interaction.guild.name,
+					"fields": embedFields
+				}).data
+			]})
 		}	
 	}
 	catch(err){

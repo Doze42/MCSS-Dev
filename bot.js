@@ -29,11 +29,11 @@ var statusQueue = [];
 
 const chalk = require ('chalk')
 const { Client, Intents } = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
-const DBL = require('dblapi.js');
+const client = new Client({ intents: 513 });
+//const DBL = require('dblapi.js');
 const isEqual = require('lodash.isequal');
 const {BaseCluster} = require('kurasuta');
-const dbl = new DBL('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjcyNjEwNzUzNTMxMDg1OSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk0MTQwMjc1fQ.2raWpbfemxhiLKdDC805KttOMm6FQ5oR_KM5VJ7voOg', client);
+//const dbl = new DBL('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1MjcyNjEwNzUzNTMxMDg1OSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTk0MTQwMjc1fQ.2raWpbfemxhiLKdDC805KttOMm6FQ5oR_KM5VJ7voOg', client);
 
 //modules
 const strings = require('./funcs/strings'); //public string manipulation functions

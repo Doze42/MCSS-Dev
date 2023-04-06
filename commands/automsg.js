@@ -3,7 +3,7 @@
 const richEmbeds = require('../funcs/embeds'); //embed generation
 module.exports = {run}
 const queryServer = require('../funcs/queryServer.js');
-const Discord = require('discord.js') //discord.js for embed object
+const { AttachmentBuilder } = require('discord.js'); //discord.js for embed object
 const strings = require('../funcs/strings'); //public string manipulation functions
 const compat = require('../funcs/compat.js');
 const jimp = require('jimp');
@@ -92,7 +92,7 @@ try{
 	}, stringJSON);
 	var stateInfo = {online: false}
 	}
-	if(embedData[0].thumbnailEnable){var message = await interaction.channel.send({files: [new Discord.MessageAttachment(Buffer.from(bufferSource, 'base64'), 'favicon.png')], embeds: [statEmbed]})}
+	if(embedData[0].thumbnailEnable){var message = await interaction.channel.send({files: [new AttachmentBuilder(Buffer.from(bufferSource, 'base64'), {name: 'favicon.png'})], embeds: [statEmbed]})}
 	else{var message = await interaction.channel.send({embeds: [statEmbed]})}
 	if (serverPort){serverIP = serverIP += (':' + serverPort)}
 	//{let conn = await global.pool.getConnection();
@@ -109,18 +109,18 @@ try{
 	// 		"lastState": statEmbed
 	//	}).replace(/\\n/g, "\\\\n").replace(/'/g, "''") + "', " + message.guildId + ")");
 	// conn.release();} //mariadb
-	await new sql.Request(global.pool).query("INSERT INTO LIVE VALUES ('" + uuid() + "', N'" + JSON.stringify(
-		{
-			"type": "panel",
-			"ip": serverIP,
-			"lastPing": new Date().getTime(),
-			"failureCount": 0,
-			"messageID": message.id,
-			"channelID": message.channel.id,
-			"guildID": message.guildId,
-			"embedTemplate": embedData[0],
-			"lastState": statEmbed
-		}).replace(/'/g, "''") + "', " + message.guildId + ")"); //mssql
+	await new sql.Request(global.pool).query(`INSERT INTO LIVE VALUES ('${uuid()}', N'${JSON.stringify(
+			{
+				"type": "panel",
+				"ip": serverIP,
+				"lastPing": new Date().getTime(),
+				"failureCount": 0,
+				"messageID": message.id,
+				"channelID": message.channel.id,
+				"guildID": message.guildId,
+				"embedTemplate": embedData[0],
+				"lastState": statEmbed
+			}).replace(/'/g, "''")}', ${message.guildId}, '${serverIP.replace(/'/g, "''")}')`); //mssql
 	return interaction.editReply({embeds:[richEmbeds.makeReply(stringJSON.automsg.success, 'notif', stringJSON)]})
 }
 
