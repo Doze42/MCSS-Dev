@@ -2,7 +2,7 @@
 
 const richEmbeds = require('../funcs/embeds'); //embed generation
 module.exports = {run}
-const queryServer = require('../funcs/queryServer.js');
+const queryServer = require('queryserver').default;
 const { AttachmentBuilder } = require('discord.js'); //discord.js for embed object
 const strings = require('../funcs/strings'); //public string manipulation functions
 const compat = require('../funcs/compat.js');

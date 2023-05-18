@@ -1,6 +1,6 @@
 //Panel Edit Live Status
 
-const queryServer = require('../funcs/queryServer.js'); //ping library
+const queryServer = require('queryserver').default; //ping library
 const richEmbeds = require('../funcs/embeds'); //embed generation
 const isEqual = require('lodash.isequal');
 const Discord = require('discord.js') //discord.js for embed object

@@ -20,10 +20,11 @@ async function run(client, interaction, stringJSON){
 			shardID = interaction.options.getInteger('shard');
 			if (shardID < 0 || shardID > (global.botConfig.shardCount - 1)){return interaction.reply({embeds:[richEmbeds.makeReply(stringJSON.botstats.badID, 'error', stringJSON)]});}
 		}
+		await interaction.deferReply(); //add configurable
 		let shardSizes = await client.shard.broadcastEval(client => client.guilds.cache.size);
 		let guildCount = 0;
 		for (var i = 0; i < shardSizes.length; i++) {guildCount += shardSizes[i];}
-		await interaction.reply({
+		await interaction.editReply({
 			files: [new AttachmentBuilder(Buffer.from(staticImages.botstats_icon, 'base64'), {name: 'botstats.png'})],
 			embeds: [
 			new EmbedBuilder({

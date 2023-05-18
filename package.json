@@ -20,11 +20,13 @@
     "chalk": "^4.1.2",
     "discord.js": "^14.9.0",
     "fs": "^0.0.1-security",
+    "hexy": "^0.3.4",
     "jimp": "^0.22.7",
     "kurasuta": "^3.0.2",
     "lodash.isequal": "^4.5.0",
     "mariadb": "^3.1.1",
     "mssql": "^9.1.1",
+    "queryserver": "^4.1.2",
     "systeminformation": "^5.17.12",
     "uuid": "^9.0.0"
   }

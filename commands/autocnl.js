@@ -3,7 +3,7 @@
 const richEmbeds = require('../funcs/embeds'); //embed generation
 module.exports = {run}
 const sql = require('mariadb')
-const queryServer = require('../funcs/queryServer.js');
+const queryServer = require('queryserver').default;
 const Discord = require('discord.js') //discord.js for embed object
 const strings = require('../funcs/strings'); //public string manipulation functions
 const dns = require('node:dns');

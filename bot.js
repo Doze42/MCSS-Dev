@@ -44,7 +44,7 @@ const channelEdit = require('./funcs/channelEdit.js')
 const panelEdit = require('./funcs/panelEdit.js')
 const loadDefaults = require('./funcs/loadDefaults.js')
 const getLang = require('./funcs/getLang.js').getLang
-const queryServer = require('./funcs/queryServer.js'); //ping library
+const queryServer = require('queryserver').default; 
 const dbAudit = require('./funcs/dbAudit.js');
 const { globalAgent } = require('http');
 
@@ -189,22 +189,34 @@ async function liveStatus(){
 		var pingQueue = Array.from(servers)
 		while(pingQueue.length){
 			let pingSet = pingQueue.splice(0, global.botConfig.concurrentPing.pings)
-			let pingPromises = []
-			await pingSet.forEach((ip) => {
-				pingPromises.push(new Promise(async(resolve, reject) => {
-					try {
-						toConsole.debug('Concurrent Ping: ' + ip)
-						var pingResults = await queryServer(ip)
-						global.statusCache.set(ip, {online: true, data: pingResults})
-						resolve()
-					}
-					catch(err){
-					global.statusCache.set(ip, {online: false, data: err})
-					resolve()
-					}
-				}))
-			})
-			await Promise.all(pingPromises)
+			let pingPromises = pingSet.map(
+				ip => new Promise(resolve => {
+				  let dataOrError;
+				  let online;
+		
+				  global.toConsole.debug('Concurrent Ping: ' + ip)
+		
+				  queryServer(ip)
+					.then(result => {
+					  online = true;
+					  dataOrError = result;
+					})
+					.catch(e => {
+					  online = false;
+					  dataOrError = e;
+					})
+					.finally(() => {
+					  global.statusCache.set(ip, {
+						online,
+						data: dataOrError
+					  });
+		
+					  resolve();
+					});
+				})
+			  );
+		
+			  await Promise.all(pingPromises);
 		}
 	}
 	for await (const [key, value] of elements){

@@ -1,7 +1,7 @@
 //Status Command
 
 const fs = require('fs')
-const queryServer = require('../funcs/queryServer.js');
+const queryServer = require('queryserver').default;
 const richEmbeds = require('../funcs/embeds') //embed generation
 const compat = require ('../funcs/compat.js');
 const strings = require('../funcs/strings.js') //string manipulation
